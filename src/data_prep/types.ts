@@ -1,6 +1,6 @@
-type UUID = string;
-type URI = string;
-type Colors = string[];
+export type UUID = string;
+export type URI = string;
+export type Colors = string[];
 
 export type MagicSet = {
     id: string;
@@ -87,4 +87,12 @@ export interface MagicCard {
     reserved: boolean;
     toughness?: string;
     type_line: string;
+}
+
+export interface ListObject<T> {
+    data: Array<T>;
+    has_more: boolean;
+    next_page?: URI;
+    total_cards?: number;
+    warnings?: Array<string>;
 }
