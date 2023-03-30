@@ -3,9 +3,7 @@
         "browser": true,
         "es2021": true
     },
-    "extends": [
-        "standard-with-typescript"
-    ],
+    "extends": ["prettier"],
     "overrides": [
     ],
     "parserOptions": {
@@ -13,7 +11,8 @@
         "sourceType": "module",
         "project": ["./tsconfig.json"]
     },
-    "plugins": [],
+    "plugins": ["prettier"],
     "rules": {
+        "prettier/prettier": "error"
     }
 }
