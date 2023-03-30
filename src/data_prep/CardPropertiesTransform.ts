@@ -1,5 +1,13 @@
 import { Transform } from "stream";
 import { MagicCard } from "./types";
+import { createObjectCsvStringifier } from "csv-writer";
+
+const csvStringifier = createObjectCsvStringifier({
+  header: [
+    { id: "prompt", title: "PROMPT" },
+    { id: "completion", title: "COMPLETION" },
+  ],
+});
 
 export class CardPropertiesTransform extends Transform {
   constructor() {
@@ -7,12 +15,12 @@ export class CardPropertiesTransform extends Transform {
   }
 
   _transform(
-    chunk: MagicCard,
+    card: MagicCard,
     encoding: BufferEncoding,
     callback: (error?: Error | null, data?: any) => void
   ) {
     try {
-      const cardString = this.formatCardProperties(chunk);
+      const cardString = this.formatCardProperties(card);
       this.push(cardString);
       callback(null);
     } catch (error) {
@@ -26,6 +34,7 @@ export class CardPropertiesTransform extends Transform {
       type_line: type,
       mana_cost: manaCost,
       colors,
+      cmc,
       rarity,
       oracle_text: text,
       power,
@@ -37,20 +46,24 @@ export class CardPropertiesTransform extends Transform {
       flavor_text: flavorText,
     } = card;
 
-    return `Name: ${name}
+    return csvStringifier.stringifyRecords([
+      {
+        prompt: name,
+        completion: `Name: ${name}
 Type: ${type}
-Mana Cost: ${manaCost}
+Mana cost: ${manaCost}
 Colors: ${colors && colors.join(", ")}
+CMC: ${cmc}
 Rarity: ${rarity}
 Text: ${text}
 Power: ${power || ""}
 Toughness: ${toughness || ""}
 Loyalty: ${loyalty || ""}
 Set: ${set}
-Card Number: ${cardNumber}
+Card number: ${cardNumber}
 Artist: ${artist}
-Flavor Text: ${flavorText || ""}
------
-`;
+Flavor text: ${flavorText || ""}`,
+      },
+    ]);
   }
 }

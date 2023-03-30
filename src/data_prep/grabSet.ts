@@ -22,6 +22,8 @@ const [setCode, outputFilePath] = args;
     const skipReprints = new CardNoReprintsTransform();
     const write = createWriteStream(outputFilePath);
 
+    write.write("prompt,completion\n");
+
     count.on("cardCount", (count: number) => {
       console.log(`${count} cards grabbed successfully!`);
     });
